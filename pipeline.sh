@@ -157,7 +157,7 @@ mkdir -p $download_dir/$scenario/$area
 # ------------------------------------------
 if [[ $clean == yes ]] || [[ ! -e "logs/.downloaded" ]]
 then
-  download=$(sbatch -p transfer --parsable slurm/submit-downloads.sh "$download_dir" "$urls_file" "$scenario")
+  download=$(sbatch -p transfer --parsable slurm/submit-downloads.sh "$download_dir" "$urls_file" "$scenario" "$area")
 else
   download=alreadydone
 fi
