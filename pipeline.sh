@@ -179,10 +179,8 @@ fi
 if [[ $clean == yes ]] || [[ ! -e "logs/.bioclimed" ]]
 then
   mkdir -p "$download_dir/$scenario/$area/bioclim"
-  bioclim=$(sbatch --parsable $dependency_for_bioclim slurm/submit-bioclim.sh "$download_dir" "$scenario" "$area" "$biopars")
+  bioclim=$(sbatch --parsable $dependency_for_bioclim -a 1-$(xsv count "$biopars") slurm/submit-bioclim.sh "$download_dir" "$scenario" "$area" "$utils" "$biopars")
 else
   bioclim=alreadydone
-fi  
-
-
+fi
 

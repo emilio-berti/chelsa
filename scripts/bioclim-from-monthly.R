@@ -27,7 +27,7 @@ if (is.na(task)) {
   message("")
   message(" === START OF PROCEDURE ===")
 
-  message(" - ", variable, ", ", year)
+  message(" - ", variable[task], ", ", year[task])
   files <- list.files(
     DATADIR,
     full.names = TRUE,
