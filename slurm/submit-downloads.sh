@@ -13,5 +13,5 @@ area="$4"
 
 bash \
   /home/berti/chelsa/scripts/download-chelsa-bio.sh \
-  "$download_dir" "$urls_file" "$scenario" "$area" &&
-  touch "logs/.downloaded"
+  "$download_dir/$scenario/$area" "$urls_file" &&
+  touch "/home/berti/logs/.downloaded"

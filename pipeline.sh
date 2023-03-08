@@ -162,5 +162,27 @@ else
   download=alreadydone
 fi
 
+# ------------------------------------------
+# Calculate Bioclimatic variables
+# 
+# This is an array job and the array 
+# parameter file is created before 
+# launching the actual job.
+# ------------------------------------------
+if [[ $download == alreadydone ]]
+then
+  dependency_for_bioclim=""
+else
+  dependency_for_bioclim="--dependency=afterok:$download"
+fi
 
-sbatch --parsable slurm/ "$download_dir" "$urls_file" "$scenario"
+if [[ $clean == yes ]] || [[ ! -e "logs/.bioclimed" ]]
+then
+  mkdir -p "$download_dir/$scenario/$area/bioclim"
+  bioclim=$(sbatch --parsable $dependency_for_bioclim slurm/submit-bioclim.sh "$download_dir" "$scenario" "$area" "$biopars")
+else
+  bioclim=alreadydone
+fi  
+
+
+

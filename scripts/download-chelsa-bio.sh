@@ -2,7 +2,7 @@
 
 echo " - Download CHELSA monthly timeseries"
 
-DIR="$1"/"$3"/"$4"
+DIR="$1"
 if [ -d $DIR ]
 then
   cd $DIR
