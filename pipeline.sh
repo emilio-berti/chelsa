@@ -134,7 +134,7 @@ fi
 if [[ $area == "europe" ]]
 then
   proj_file=$eu_proj
-else if [[ $area == "america" ]]
+elif [[ $area == "america" ]]
 then
   proj_file=$am_proj
 else
@@ -143,7 +143,7 @@ fi
 
 echo "- Scenario: $scenario"
 echo "- Area: $area"
-echo "- Crs:"
+echo "- Crs: $proj_file"
 cat $proj_file
 
 mkdir -p $download_dir/$scenario/$area
@@ -157,7 +157,7 @@ mkdir -p $download_dir/$scenario/$area
 # ------------------------------------------
 if [[ $clean == yes ]] || [[ ! -e "logs/.downloaded" ]]
 then
-  download=$(sbatch -p transfer --parsable slurm/submit-downloads.sh "$download_dir" "$urls_file" "$scenario")
+  download=$(sbatch -p transfer --parsable slurm/submit-downloads.sh "$download_dir" "$urls_file" "$scenario" "$area")
 else
   download=alreadydone
 fi
