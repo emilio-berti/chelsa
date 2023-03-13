@@ -1,13 +1,6 @@
 suppressPackageStartupMessages(library(terra))
 suppressPackageStartupMessages(library(Rcpp))
 
-# BIO01 = mean tas annual
-# BIO10 = mean tas warmest quarter
-# BIO11 = mean tas coldest annual
-
-# BIO12 = pr total annual
-# BIO16 = pr wettest wettest quarter
-# BIO17 = pr driest driest quarter
 
 args <- commandArgs(trailingOnly = TRUE)
 DATADIR <- args[1]

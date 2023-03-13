@@ -92,7 +92,6 @@ quarter <- function(files, stat) {
   stopifnot(stat %in% c("lowest", "highest"))
   r <- rast(files)
   vals <- values(r)
-  stopifnot(ncell(ans) == nrow(vals))
   ans <- c(r[[1]], r[[1]])
   if (stat == "lowest") {
     stat <- lowest_quarter(vals)

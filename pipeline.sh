@@ -148,6 +148,8 @@ cat $proj_file
 
 mkdir -p $download_dir/$scenario/$area
 
+echo " ======= Process Bioclim from Chelsa v.2 ======== "
+
 # ------------------------------------------
 # Download CHELSA v2 monthly averages of:
 # - tas
@@ -157,17 +159,17 @@ mkdir -p $download_dir/$scenario/$area
 # ------------------------------------------
 if [[ $clean == yes ]] || [[ ! -e "logs/.downloaded" ]]
 then
+  echo " - Downloading CHELSA v.2"
   download=$(sbatch -p transfer --parsable slurm/submit-downloads.sh "$download_dir" "$urls_file" "$scenario" "$area")
 else
+  echo " - CHELSA already downloaded"
   download=alreadydone
 fi
 
 # ------------------------------------------
 # Calculate Bioclimatic variables
 # 
-# This is an array job and the array 
-# parameter file is created before 
-# launching the actual job.
+# This is an array job.
 # ------------------------------------------
 if [[ $download == alreadydone ]]
 then
@@ -178,9 +180,18 @@ fi
 
 if [[ $clean == yes ]] || [[ ! -e "logs/.bioclimed" ]]
 then
+  echo " - Launching bioclim jobs..."
   mkdir -p "$download_dir/$scenario/$area/bioclim"
   bioclim=$(sbatch --parsable $dependency_for_bioclim -a 1-$(xsv count "$biopars") slurm/submit-bioclim.sh "$download_dir" "$scenario" "$area" "$utils" "$biopars")
 else
+  echo " - Bioclimatic variables already calculated"
   bioclim=alreadydone
 fi
 
+# ------------------------------------------
+# Project and Crop to Area
+# 
+# This is an array job. 
+# ------------------------------------------
+
+echo " ================================================ "
