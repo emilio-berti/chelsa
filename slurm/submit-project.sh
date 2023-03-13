@@ -2,7 +2,7 @@
 
 #SBATCH -J ChelsaProject
 #SBATCH --chdir=/work/berti
-#SBATCH --output=/work/%u/%x-%A-%a.out
+#SBATCH --output=/work/%u/chelsa/%x-%A-%a.out
 #SBATCH --mem-per-cpu=20G
 #SBATCH --time=0-01:00:00
 

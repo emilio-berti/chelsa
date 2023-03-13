@@ -2,7 +2,7 @@
 
 #SBATCH -J ChelsaBioclim
 #SBATCH --chdir=/work/berti
-#SBATCH --output=/work/%u/%x-%A-%a.out
+#SBATCH --output=/work/%u/chelsa/%x-%A-%a.out
 #SBATCH --mem-per-cpu=400G
 #SBATCH --time=0-10:00:00
 
