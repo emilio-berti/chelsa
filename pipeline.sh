@@ -148,6 +148,7 @@ cat $proj_file
 
 mkdir -p $download_dir/$scenario/$area
 
+echo ""
 echo " ======= Process Bioclim from Chelsa v.2 ======== "
 
 # ------------------------------------------
@@ -193,21 +194,27 @@ fi
 # 
 # This is an array job. 
 # ------------------------------------------
-if [[ $project == alreadydone ]]
+if [[ $bioclim == alreadydone ]]
 then
   dependency_for_project=""
 else
   dependency_for_project="--dependency=afterok:$bioclim"
 fi
 
-if [[ $clean == yes ]] || [[ ! -e "logs/.projected" ]]
-then
-  echo " - Launching projection jobs..."
-  mkdir -p "$download_dir/$scenario/$area"
-  project=$(sbatch --parsable $dependency_for_project -a 1-$(xsv count "$projpars") slurm/submit-project.sh "$download_dir" "$scenario" "$area" "$projpars")
+if [[ "$area" == world ]]
+then 
+  echo " - Cannot project for area: $area. skipping..."
 else
-  echo " - Bioclimatic variables already projected"
-  project=alreadydone
+  if [[ $clean == yes ]] || [[ ! -e "logs/.projected" ]]
+  then
+    echo " - Launching projection jobs..."
+    mkdir -p "$download_dir/$scenario/$area"
+    project=$(sbatch --parsable $dependency_for_project -a     1-$(xsv count "$projpars") slurm/submit-project.sh "$download_dir" "$scenario" "$area" "$projpars")
+  else
+    echo " - Bioclimatic variables already projected"
+    project=alreadydone
+  fi
 fi
 
 echo " ================================================ "
+echo ""

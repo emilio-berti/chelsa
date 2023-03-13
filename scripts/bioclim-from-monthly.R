@@ -47,14 +47,14 @@ if (is.na(task)) {
     )
     rm(bio12); gc()
     message("  - BIO16 ")
-    bio16 <- quarter(files, "highest")
+    bio16 <- quarter(files, "highest", "mean")
     writeRaster(
       bio16[[1]], 
       paste0(DATADIR, "/bioclim/BIO16-", year[task], ".tif"),
       overwrite = TRUE
     )
     message("  - BIO17 ")
-    bio17 <- quarter(files, "lowest")
+    bio17 <- quarter(files, "lowest", "mean")
     writeRaster(
       bio17[[1]], 
       paste0(DATADIR, "/bioclim/BIO17-", year[task], ".tif"),
@@ -74,7 +74,7 @@ if (is.na(task)) {
     )
     rm(bio01); gc()
     message("  - BIO16 ")
-    bio10 <- quarter(files, "highest")
+    bio10 <- quarter(files, "highest", "mean")
     writeRaster(
       bio10[[1]], 
       paste0(DATADIR, "/bioclim/BIO10-", year[task], ".tif"),
@@ -82,7 +82,7 @@ if (is.na(task)) {
     )
     rm(bio10); gc()
     message("  - BIO11 ")
-    bio11 <- quarter(files, "lowest")
+    bio11 <- quarter(files, "lowest", "mean")
     writeRaster(
       bio11[[1]], 
       paste0(DATADIR, "/bioclim/BIO11-", year[task], ".tif"),

@@ -1,11 +1,12 @@
 #' @title Calculate Lower Quarter
 #' @param x matrix n x 12 (months).
+#' @param fun the function used to summarize.
 #' @return matrix n x 2:
 #'   the first column is the value, 
 #'   the second column the first calendar month of the quarter.
 cppFunction(
   '
-  NumericMatrix lowest_quarter ( NumericMatrix x ) {
+  NumericMatrix lowest_quarter ( NumericMatrix x , String fun ) {
     
     int rows = x.nrow();
     int cols = x.ncol();
@@ -15,7 +16,12 @@ cppFunction(
 
     for (int i = 0 ; i < rows ; i++) {
       for (int j = 0 ; j < (cols - 2) ; j++) {
-        window = x(i, j) + x(i, j + 1) + x(i, j + 2);
+        if (fun == "sum") {
+          window = x(i, j) + x(i, j + 1) + x(i, j + 2);
+        } else {
+          window = x(i, j) + x(i, j + 1) + x(i, j + 2);
+          window = window / 3;
+        }
         if (window < val || j == 0) {
           val = window;
           ans(i, 1) = j;
@@ -30,12 +36,13 @@ cppFunction(
 )
 #' @title Calculate Highest Quarter
 #' @param x matrix n x 12 (months).
+#' @param fun the function used to summarize.
 #' @return matrix n x 2:
 #'   the first column is the value, 
 #'   the second column the first calendar month of the quarter.
 cppFunction(
   '
-  NumericMatrix highest_quarter ( NumericMatrix x ) {
+  NumericMatrix highest_quarter ( NumericMatrix x , String fun ) {
     
     int rows = x.nrow();
     int cols = x.ncol();
@@ -45,7 +52,12 @@ cppFunction(
 
     for (int i = 0 ; i < rows ; i++) {
       for (int j = 0 ; j < (cols - 2) ; j++) {
-        window = x(i, j) + x(i, j + 1) + x(i, j + 2);
+        if (fun == "sum") {
+          window = x(i, j) + x(i, j + 1) + x(i, j + 2);
+        } else {
+          window = x(i, j) + x(i, j + 1) + x(i, j + 2);
+          window = window / 3;
+        }
         if (window > val || j == 0) {
           val = window;
           ans(i, 1) = j;
@@ -87,16 +99,18 @@ bio12 <- function(files) {
 #' @param stat string of the statistic to calculates 
 #'   "lowest" for driest/coldest quarter,
 #'   "highest" for wettest/warmest quarter.
+#' @param fun the function used to summarize.
 #' @return SpatRaster.
-quarter <- function(files, stat) {
+quarter <- function(files, stat, fun) {
   stopifnot(stat %in% c("lowest", "highest"))
+  stopifnot(fun %in% c("sum", "mean"))
   r <- rast(files)
   vals <- values(r)
   ans <- c(r[[1]], r[[1]])
   if (stat == "lowest") {
-    stat <- lowest_quarter(vals)
+    stat <- lowest_quarter(vals, fun)
   } else {
-    stat <- highest_quarter(vals)
+    stat <- highest_quarter(vals, fun)
   }
   values(ans) <- stat
   names(ans) <- c("value", "starting month")
