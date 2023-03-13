@@ -24,6 +24,7 @@ if (is.na(task)) {
   message(" === START OF PROCEDURE ===")
   file <- read.csv(PARS)[["file"]][task]
   bio <- gsub("-[0-9]+.tif", "", file)
+  year <- gsub("[A-Z0-9]+-|.tif", "", file)
   message(" - ", file)
   r <- rast(file.path(input, file))
   r <- project(r, templ)
@@ -31,7 +32,7 @@ if (is.na(task)) {
   if (bio %in% c("BIO01", "BIO10", "BIO11")) r <- r / 10
   writeRaster(
     r, 
-    paste0(output, "/", names(r), ".tif"),
+    paste0(output, "/", bio, '-', year, ".tif"),
     overwrite = TRUE
   )
   message(" === END OF PROCEDURE === ")
