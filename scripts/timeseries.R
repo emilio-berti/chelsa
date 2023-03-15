@@ -1,5 +1,6 @@
 suppressPackageStartupMessages(library(tidyverse))
 suppressPackageStartupMessages(library(terra))
+suppressPackageStartupMessages(library(Rcpp))
 
 args <- commandArgs(trailingOnly = TRUE)
 DATADIR <- args[1]
@@ -26,18 +27,20 @@ if (is.na(task)) {
     full.names = TRUE
   )
   ff <- ff[grepl(".tif", ff)]
-  ff <- order_files(files)
+  ff <- order_files(ff)
 
   message("  - ", bio)
-  
+  message("  - loading rasters") 
   r <- rast(ff)
   years <- str_split(ff, "/", simplify = TRUE)
-  years <- file_names[, ncol(file_names)]
-  gsub("[A-Za-z]+[0-9]{2}-|[.]tif", "", years)
-  if (any(year != seq(min(year), max(year)))) {
+  years <- years[, ncol(years)]
+  years <- gsub("[A-Za-z]+[0-9]{2}-|[.]tif", "", years)
+  yr <- as.numeric(years)
+  if (any(yr != seq(min(yr), max(yr)))) {
     stop("Years are not in order. Exiting...")
   }
   names(r) <- years
+  message("  - extracting timeseries")
   xy <- xyFromCell(r, seq_len(ncell(r)))
   cellID <- cellFromXY(r, xy) %>%
     as_tibble() %>%
@@ -47,7 +50,8 @@ if (is.na(task)) {
     values() %>% 
     as_tibble()
   res <- bind_cols(cellID, xy, ts)
-  write_csv(paste0(datadir, "/", bio, ".csv"))
+  message(" -- save to csv")
+  write_csv(res, paste0(datadir, "/", bio, ".csv"))
  
   message(" === END OF PROCEDURE === ")
 }
