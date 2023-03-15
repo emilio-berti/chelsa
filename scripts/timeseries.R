@@ -34,7 +34,7 @@ if (is.na(task)) {
   years <- str_split(ff, "/", simplify = TRUE)
   years <- file_names[, ncol(file_names)]
   gsub("[A-Za-z]+[0-9]{2}-|[.]tif", "", years)
-  if (any(year != seq(min(year), max(year))) {
+  if (any(year != seq(min(year), max(year)))) {
     stop("Years are not in order. Exiting...")
   }
   names(r) <- years

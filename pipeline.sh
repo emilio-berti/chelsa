@@ -179,7 +179,7 @@ else
   dependency_for_bioclim="--dependency=afterok:$download"
 fi
 
-if [[ $clean == yes ]] || [[ ! -e "logs/.bioclimed" ]]
+if [[ $clean == yes ]] || [[ ! -e "logs/.bioclimed-$area-$scenario" ]]
 then
   echo " - Launching bioclim jobs..."
   mkdir -p "$download_dir/$scenario/$area/bioclim"
@@ -205,14 +205,42 @@ if [[ "$area" == world ]]
 then 
   echo " - Cannot project for area: $area. skipping..."
 else
-  if [[ $clean == yes ]] || [[ ! -e "logs/.projected" ]]
+  if [[ $clean == yes ]] || [[ ! -e "logs/.projected-$area-$scenario" ]]
   then
     echo " - Launching projection jobs..."
     mkdir -p "$download_dir/$scenario/$area"
-    project=$(sbatch --parsable $dependency_for_project -a     1-$(xsv count "$projpars") slurm/submit-project.sh "$download_dir" "$scenario" "$area" "$projpars")
+    project=$(sbatch --parsable $dependency_for_project -a 1-$(xsv count "$projpars") slurm/submit-project.sh "$download_dir" "$scenario" "$area" "$projpars")
   else
     echo " - Bioclimatic variables already projected"
     project=alreadydone
+  fi
+fi
+
+# ------------------------------------------
+# Extract Timeseries
+#
+# Extract timeseries from rasters and save
+# a dataframe with cellID, x (lon), y (lat),
+# and value for each year.
+# ------------------------------------------
+if [[ $project == alreadydone ]]
+then
+  dependency_for_ts=""
+else
+  dependency_for_ts="--dependency=afterok:project"
+fi
+
+if [[ "$area" == world ]]
+then
+  echo " - Cannot serialized for area: $area. skipping..."
+else
+  if [[ $clean == yes ]] || [[ ! -e "logs/.serialized-$area-$scenario" ]]
+  then 
+    echo " - Launching timeseries jobs..."
+    ts=$(sbatch --parsable $dependency_for_ts -a 1-$(xsv count "$tspars") slurm/submit-timeseries.sh "$download_dir" "$scenario" "$area" "$utils" "$tspars")
+  else
+    echo " - Timeseries already extracted"
+    ts=alreadydone
   fi
 fi
 
