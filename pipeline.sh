@@ -179,7 +179,7 @@ else
   dependency_for_bioclim="--dependency=afterok:$download"
 fi
 
-if [[ $clean == yes ]] || [[ ! -e "logs/.bioclimed-$area-$scenario" ]]
+if [[ $clean == yes ]] || [[ ! -e "logs/.bioclimed" ]]
 then
   echo " - Launching bioclim jobs..."
   mkdir -p "$download_dir/$scenario/$area/bioclim"
@@ -227,7 +227,7 @@ if [[ $project == alreadydone ]]
 then
   dependency_for_ts=""
 else
-  dependency_for_ts="--dependency=afterok:project"
+  dependency_for_ts="--dependency=afterok:$project"
 fi
 
 if [[ "$area" == world ]]

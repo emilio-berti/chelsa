@@ -19,4 +19,4 @@ module load GCC/10.2.0 OpenMPI/4.0.5 R/4.0.4-2
 Rscript --vanilla \
   /home/berti/chelsa/scripts/bioclim-from-monthly.R \
   "$download_dir/$scenario/$area" "$utils" "$pars" &&
-  touch "/home/berti/chelsa/logs/.bioclimed-$area-$scenario"
+  touch "/home/berti/chelsa/logs/.bioclimed"
